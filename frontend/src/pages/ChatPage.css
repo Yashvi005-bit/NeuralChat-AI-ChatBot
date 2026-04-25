@@ -1,0 +1,49 @@
+/* ============================================
+   ChatPage.css — NeuralChat Chat Layout
+   ============================================ */
+
+.chat-page {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: #000000;
+  font-family: var(--font-body);
+}
+
+/* Mobile overlay when sidebar is open */
+.chat-page__overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 9;
+}
+
+@media (max-width: 768px) {
+  .chat-page__overlay {
+    display: block;
+  }
+
+  /* On mobile, sidebar is positioned absolutely */
+  .chat-page .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 10;
+    width: 260px !important;
+    min-width: 260px !important;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    transform: translateX(0);
+    transition: transform var(--transition-base);
+  }
+
+  .chat-page .sidebar--collapsed {
+    transform: translateX(-100%);
+    width: 260px !important;
+    min-width: 260px !important;
+  }
+}

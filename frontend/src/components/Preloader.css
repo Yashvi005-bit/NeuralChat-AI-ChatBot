@@ -1,0 +1,166 @@
+/* ============================================
+   PRELOADER
+   Full-screen · Black · Horizontal Bar
+   Bar is CSS-animation-driven (no JS width hack)
+   ============================================ */
+
+/* ── Wrapper ── */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  /* Smooth fade-out when .preloader--exit is added */
+  transition: opacity 0.65s ease;
+}
+
+.preloader--exit {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Subtle radial glow ── */
+.preloader__bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 60% 50% at 50% 50%,
+    rgba(99, 102, 241, 0.06) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* ── Centre column ── */
+.preloader__center {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  width: min(300px, 80vw);
+  animation: preFadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Wordmark ── */
+.preloader__logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.025em;
+  margin-bottom: 6px;
+}
+
+.preloader__logo-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #6366f1;
+  flex-shrink: 0;
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+/* ── Track ── */
+.preloader__track {
+  width: 100%;
+  height: 2px;
+  background: #18181b;
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── Fill — CSS animation (0% → 100%) ──
+   Duration matches FILL_MS in JS (2800ms)
+   forwards keeps it at 100% when done
+   cubic-bezier: ease-in-out feel
+*/
+.preloader__fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #4f52d9 0%, #6366f1 50%, #a5b4fc 100%);
+  border-radius: 2px;
+  transform-origin: left center;
+  /* Animate scaleX 0 → 1 over exactly FILL_MS */
+  animation: fillBar 2.8s cubic-bezier(0.4, 0, 0.25, 1) forwards;
+  /* Shimmer gloss */
+  overflow: hidden;
+}
+
+.preloader__fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.22) 50%,
+    transparent 65%
+  );
+  background-size: 250% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+/* ── Footer row ── */
+.preloader__footer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.preloader__label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: #3f3f46;
+  letter-spacing: 0.02em;
+}
+
+.preloader__counter {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #52525b;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  min-width: 30px;
+  text-align: right;
+}
+
+/* ============================================
+   KEYFRAMES
+   ============================================ */
+
+/* Bar: scaleX 0 → 1 */
+@keyframes fillBar {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* Entrance */
+@keyframes preFadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* Logo dot */
+@keyframes dotPulse {
+  0%, 100% { opacity: 1;    transform: scale(1);    }
+  50%       { opacity: 0.45; transform: scale(0.8);  }
+}
+
+/* Shimmer */
+@keyframes shimmer {
+  0%   { background-position: -250% 0; }
+  100% { background-position:  250% 0; }
+}

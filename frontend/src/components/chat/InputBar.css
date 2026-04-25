@@ -1,0 +1,123 @@
+/* ============================================
+   InputBar.css — NeuralChat Chat UI
+   ============================================ */
+
+.input-bar {
+  padding: 12px 20px 20px;
+  flex-shrink: 0;
+  background: #000000;
+  position: relative;
+}
+
+/* Fade gradient above input bar */
+.input-bar::before {
+  content: '';
+  position: absolute;
+  top: -32px;
+  left: 0;
+  right: 0;
+  height: 32px;
+  background: linear-gradient(to bottom, transparent, #000000);
+  pointer-events: none;
+}
+
+.input-bar__inner {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.input-bar__wrap {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  background: #0c0c0f;
+  border: 1px solid #222228;
+  border-radius: var(--radius-xl);
+  padding: 10px 10px 10px 18px;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.input-bar__wrap:focus-within {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1), 0 4px 24px rgba(0,0,0,0.4);
+}
+
+.input-bar__textarea {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  max-height: 200px;
+  min-height: 24px;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.input-bar__textarea::placeholder {
+  color: #3f3f46;
+}
+
+.input-bar__textarea::-webkit-scrollbar { width: 3px; }
+.input-bar__textarea::-webkit-scrollbar-track { background: transparent; }
+.input-bar__textarea::-webkit-scrollbar-thumb { background: #222; border-radius: 2px; }
+
+.input-bar__send {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  border: none;
+  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast), opacity var(--transition-fast);
+}
+
+.input-bar__send:not(:disabled) {
+  background: var(--color-accent);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+.input-bar__send:not(:disabled):hover {
+  background: var(--color-accent-hover);
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+}
+
+.input-bar__send:not(:disabled):active {
+  transform: scale(0.96);
+}
+
+.input-bar__send:disabled {
+  background: #1a1a1d;
+  color: #3f3f46;
+  cursor: not-allowed;
+}
+
+/* Spinner inside send button when loading */
+.input-bar__spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.2);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spinSlow 0.65s linear infinite;
+}
+
+/* ---- Hint text ---- */
+.input-bar__hint {
+  text-align: center;
+  font-size: 0.68rem;
+  color: var(--color-text-faint);
+  margin-top: 10px;
+  letter-spacing: -0.01em;
+  opacity: 0.6;
+}
