@@ -16,4 +16,9 @@ app.use(morgan("dev"));
 
 app.use("/api/v1", appRouter);
 
+// Health check route
+app.get("/", (req, res) => {
+  res.send("NeuralChat API is running... 🚀");
+});
+
 export default app; 
