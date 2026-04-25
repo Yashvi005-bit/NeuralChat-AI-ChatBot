@@ -1,189 +1,197 @@
-import { NextFunction, Request, Response} from "express";
+import { NextFunction, Request, Response } from "express";
 import User from "../models/User.js";
-import {hash,compare } from "bcrypt";
+import { hash, compare } from "bcrypt";
 import { createToken } from "../utils/token-manager.js";
 import { COOKIE_NAME } from "../utils/constants.js";
 
-export const getAllUsers = async(
-    req:Request, 
-    res:Response,
-    next:NextFunction) =>{
+export const getAllUsers = async (
+    req: Request,
+    res: Response,
+    next: NextFunction) => {
     try {
         //get all users
-        const users = await User.find(); 
-        return res.status(200).json({message:"OK", users})
-     }catch (error) {
-    console.log(error);
-
-    if (error instanceof Error) {
-        return res.status(500).json({
-            message: "ERROR",
-            cause: error.message
-        });
-    }
-
-    return res.status(500).json({
-        message: "ERROR",
-        cause: "Unknown error"
-    });
-}
-     // catch (error) {
-    //     console.log(error)
-    //     return res.status(200).json({message:"ERROR", cause: error.message})
-    // } 
-}; 
-
-export const userSignup = async(
-    req:Request, 
-    res:Response,
-    next:NextFunction) =>{
-    try {
-        //user signup
-        const {name , email , password} = req.body;
-        const existingUser = await User.findOne({email})
-        // if(existingUser) return res.status(401).json("User already Registered")
-        if (existingUser) {
-        return res.status(401).json({
-        message: "User already registered"
-    });
-}
-        const hashedPassword = await hash(password, 10);
-        const user = new User({name, email, password : hashedPassword})
-        await user.save();
-        
-        //Create token and store cookie
-        res.clearCookie(COOKIE_NAME,{
-            path: "/",
-            domain: "localhost",
-            httpOnly: true,
-            signed: true
-        });
-
-
-        const token = createToken(user._id.toString(), user.email,"7d");
-        const expires = new Date();
-        expires.setDate(expires.getDate() + 7);
-        res.cookie(COOKIE_NAME,token,{
-            path: "/",
-            domain: "localhost",
-            expires,
-            httpOnly: true,
-            signed: true
-        })
-
-        return res.status(201).json({message:"OK", id: user._id.toString()})
+        const users = await User.find();
+        return res.status(200).json({ message: "OK", users })
     } catch (error) {
-    console.log(error);
+        console.log(error);
 
-    if (error instanceof Error) {
+        if (error instanceof Error) {
+            return res.status(500).json({
+                message: "ERROR",
+                cause: error.message
+            });
+        }
+
         return res.status(500).json({
             message: "ERROR",
-            cause: error.message
+            cause: "Unknown error"
         });
     }
-
-    return res.status(500).json({
-        message: "ERROR",
-        cause: "Unknown error"
-    });
-}
     // catch (error) {
     //     console.log(error)
     //     return res.status(200).json({message:"ERROR", cause: error.message})
     // } 
-}; 
-
-export const userlogin = async(
-    req:Request, 
-    res:Response,
-    next:NextFunction) =>{
-    try {
-        //user login
-        const { email , password} = req.body;
-        const user = await User.findOne({ email })
-        if(!user){
-            //  return res.status(401).send("User not registerd")
-            return res.status(401).json({
-    message: "User not registered"
-});
-        }
-        const isPasswordCorrect = await compare(password, user.password)
-        if(!isPasswordCorrect){
-            // return res.status(403).send("Incorrect password")
-            return res.status(403).json({
-    message: "Incorrect password"
-});
-        }
-        res.clearCookie(COOKIE_NAME,{
-            path: "/",
-            domain: "localhost",
-            httpOnly: true,
-            signed: true
-        });
-
-
-        const token = createToken(user._id.toString(), user.email,"7d");
-        const expires = new Date();
-        expires.setDate(expires.getDate() + 7);
-        res.cookie(COOKIE_NAME,token,{
-            path: "/",
-            domain: "localhost",
-            expires,
-            httpOnly: true,
-            signed: true
-        })
-
-        return res.status(200).json({message:"OK", id: user._id.toString()})
-    } catch (error) {
-    console.log(error);
-
-    if (error instanceof Error) {
-        return res.status(500).json({
-            message: "ERROR",
-            cause: error.message
-        });
-    }
-
-    return res.status(500).json({
-        message: "ERROR",
-        cause: "Unknown error"
-    });
-} 
-//catch (error) {
- //   console.log(error)
- //   return res.status(200).json({message:"ERROR", cause: error.message})
-//}
-    
 };
 
-export const verifyUser = async(
-    req:Request, 
-    res:Response,
-    next:NextFunction) =>{
+export const userSignup = async (
+    req: Request,
+    res: Response,
+    next: NextFunction) => {
+    try {
+        //user signup
+        const { name, email, password } = req.body;
+        const existingUser = await User.findOne({ email })
+        // if(existingUser) return res.status(401).json("User already Registered")
+        if (existingUser) {
+            return res.status(401).json({
+                message: "User already registered"
+            });
+        }
+        const hashedPassword = await hash(password, 10);
+        const user = new User({ name, email, password: hashedPassword })
+        await user.save();
+
+        //Create token and store cookie
+        res.clearCookie(COOKIE_NAME, {
+            path: "/",
+            // domain: "localhost",
+            httpOnly: true,
+            signed: true,
+            secure: true,
+            sameSite: "none",
+        });
+
+
+        const token = createToken(user._id.toString(), user.email, "7d");
+        const expires = new Date();
+        expires.setDate(expires.getDate() + 7);
+        res.cookie(COOKIE_NAME, token, {
+            path: "/",
+            // domain: "localhost",
+            expires,
+            httpOnly: true,
+            signed: true,
+            secure: true,
+            sameSite: "none",
+        })
+
+        return res.status(201).json({ message: "OK", id: user._id.toString() })
+    } catch (error) {
+        console.log(error);
+
+        if (error instanceof Error) {
+            return res.status(500).json({
+                message: "ERROR",
+                cause: error.message
+            });
+        }
+
+        return res.status(500).json({
+            message: "ERROR",
+            cause: "Unknown error"
+        });
+    }
+    // catch (error) {
+    //     console.log(error)
+    //     return res.status(200).json({message:"ERROR", cause: error.message})
+    // } 
+};
+
+export const userlogin = async (
+    req: Request,
+    res: Response,
+    next: NextFunction) => {
     try {
         //user login
-        const user = await User.findById(res.locals.jwtData.id );
-        if(!user){
+        const { email, password } = req.body;
+        const user = await User.findOne({ email })
+        if (!user) {
             //  return res.status(401).send("User not registerd")
-            return res.status(401).json({message: "User not registered OR Token malfunctioned"});
+            return res.status(401).json({
+                message: "User not registered"
+            });
         }
-        if(user._id.toString() !== res.locals.jwtData.id){
-            return res.status(401).json({message: "Permissions didn't match"});
+        const isPasswordCorrect = await compare(password, user.password)
+        if (!isPasswordCorrect) {
+            // return res.status(403).send("Incorrect password")
+            return res.status(403).json({
+                message: "Incorrect password"
+            });
         }
-        return res.status(200).json({message: "OK", name: user.name, email: user.email});   
-} catch (error){
-    console.log(error);
-//     return res.status(200).json({message: "ERROR", cause: error.message});
-if (error instanceof Error) {
-      return res.status(500).json({
-        message: "ERROR",
-        cause: error.message
-      });
-    }
+        res.clearCookie(COOKIE_NAME, {
+            path: "/",
+            // domain: "localhost",
+            httpOnly: true,
+            signed: true,
+            secure: true,
+            sameSite: "none",
+        });
 
-    return res.status(500).json({
-      message: "ERROR",
-      cause: "Unknown error"
-    });
-  }
+
+        const token = createToken(user._id.toString(), user.email, "7d");
+        const expires = new Date();
+        expires.setDate(expires.getDate() + 7);
+        res.cookie(COOKIE_NAME, token, {
+            path: "/",
+            // domain: "localhost",
+            expires,
+            httpOnly: true,
+            signed: true,
+            secure: true,
+            sameSite: "none",
+        })
+
+        return res.status(200).json({ message: "OK", id: user._id.toString() })
+    } catch (error) {
+        console.log(error);
+
+        if (error instanceof Error) {
+            return res.status(500).json({
+                message: "ERROR",
+                cause: error.message
+            });
+        }
+
+        return res.status(500).json({
+            message: "ERROR",
+            cause: "Unknown error"
+        });
+    }
+    //catch (error) {
+    //   console.log(error)
+    //   return res.status(200).json({message:"ERROR", cause: error.message})
+    //}
+
+};
+
+export const verifyUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction) => {
+    try {
+        //user login
+        const user = await User.findById(res.locals.jwtData.id);
+        if (!user) {
+            //  return res.status(401).send("User not registerd")
+            return res.status(401).json({ message: "User not registered OR Token malfunctioned" });
+        }
+        if (user._id.toString() !== res.locals.jwtData.id) {
+            return res.status(401).json({ message: "Permissions didn't match" });
+        }
+        return res.status(200).json({ message: "OK", name: user.name, email: user.email });
+    } catch (error) {
+        console.log(error);
+        //     return res.status(200).json({message: "ERROR", cause: error.message});
+        if (error instanceof Error) {
+            return res.status(500).json({
+                message: "ERROR",
+                cause: error.message
+            });
+        }
+
+        return res.status(500).json({
+            message: "ERROR",
+            cause: "Unknown error"
+        });
+    }
 };
