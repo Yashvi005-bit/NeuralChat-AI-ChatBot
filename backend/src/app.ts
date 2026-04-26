@@ -7,7 +7,8 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:5173", // frontend URL , allow request from 5173
+  // origin: "http://localhost:5173", // frontend URL , allow request from 5173
+  origin: "https://neural-chat-ai-chat-bot-4vpy.vercel.app/",
   credentials: true
 }));
 app.use(express.json());
