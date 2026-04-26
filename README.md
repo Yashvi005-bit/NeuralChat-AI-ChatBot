@@ -25,3 +25,9 @@ NeuralChat AI is a full-stack AI chatbot built using the MERN stack with a prima
 
 The primary objective of this project was to strengthen practical backend development skills by implementing real-world concepts such as secure authentication flows, API communication, database integration, and scalable server-side logic.
 
+<img width="1918" height="862" alt="image" src="https://github.com/user-attachments/assets/82970049-bb0b-4c6a-aa1a-4d25e23cb4c5" />
+
+<img width="1918" height="856" alt="image" src="https://github.com/user-attachments/assets/f6b33dd7-3372-48c6-b8b5-0fb2c08f0a5c" />
+
+
+
