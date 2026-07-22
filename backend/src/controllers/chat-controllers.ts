@@ -56,7 +56,7 @@ export const generatechatcompletion = async (
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            model: "meta-llama/Meta-Llama-3-8B-Instruct",
+            model: "meta-llama/Llama-3.1-8B-Instruct",
             messages: history,
             max_tokens: 500,
             temperature: 0.7,
@@ -161,4 +161,4 @@ export const deleteSession = async (
     return res.status(500).json({ message: error.message });
   }
 };
-
+
